@@ -1,0 +1,8 @@
+target/
+nbproject/
+core-build.log
+core-build.err
+docker-build.log
+docker-build.err
+maven-build.log
+maven-build.err

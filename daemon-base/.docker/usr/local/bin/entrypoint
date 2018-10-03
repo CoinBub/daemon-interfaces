@@ -1,0 +1,17 @@
+#!/bin/sh
+
+if [ ! -e "$DAEMON_CONF_FILE" ];
+then
+    echo "rpcuser=${RPCUSER:-$(whoami)}" >> "$DAEMON_CONF_FILE"
+    echo "rpcpassword=${RPCPASSWORD:-`dd if=/dev/urandom bs=33 count=1 2>/dev/null | base64`}" >> "$DAEMON_CONF_FILE"
+    cat "$DAEMON_CONF_FILE"
+else
+    cat "$DAEMON_CONF_FILE" |
+        USER="${RPCUSER:-$(whoami)}" \
+        PASSWORD="${RPCPASSWORD:-`dd if=/dev/urandom bs=33 count=1 2>/dev/null | base64`}" \
+        envsubst > "${DAEMON_CONF_FILE}_new"
+    mv "${DAEMON_CONF_FILE}_new" "$DAEMON_CONF_FILE"
+    cat "$DAEMON_CONF_FILE"
+fi
+
+exec "$@"
